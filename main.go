@@ -1,11 +1,16 @@
 package main
 
 import (
+	// "go_task_api/models"
+	"github/sammygojs/go_task_api/models"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"net/http"
 )
+
+// import "go_task_api/models"
 
 type Task struct {
 	ID     uint   `json:"id" gorm:"primaryKey"`
@@ -21,7 +26,7 @@ func initDatabase() {
 	if err != nil {
 		panic("Failed to connect to database!")
 	}
-	DB.AutoMigrate(&Task{})
+	DB.AutoMigrate(&Task{}, &models.User{})
 }
 
 func getTasks(c *gin.Context) {
