@@ -1,4 +1,4 @@
-module github/sammygojs/go_task_api
+module go_task_api
 
 go 1.24.2
 

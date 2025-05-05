@@ -2,8 +2,8 @@
 package controllers
 
 import (
-	"github/sammygojs/go_task_api/task-api/models"
-	"github/sammygojs/go_task_api/task-api/utils"
+	"go_task_api/models"
+	"go_task_api/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
