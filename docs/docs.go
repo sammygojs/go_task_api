@@ -145,12 +145,36 @@ const docTemplate = `{
                 "tags": [
                     "Tasks"
                 ],
-                "summary": "Get all tasks for the logged-in user (optionally filtered by project)",
+                "summary": "Get all tasks for the logged-in user (with filters, pagination, sorting)",
                 "parameters": [
                     {
                         "type": "integer",
                         "description": "Filter by Project ID",
                         "name": "project_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Max number of results",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of results to skip",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by field (e.g. created_at, title, status)",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort order (asc or desc)",
+                        "name": "order",
                         "in": "query"
                     }
                 ],

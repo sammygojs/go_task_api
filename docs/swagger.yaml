@@ -121,6 +121,22 @@ paths:
         in: query
         name: project_id
         type: integer
+      - description: Max number of results
+        in: query
+        name: limit
+        type: integer
+      - description: Number of results to skip
+        in: query
+        name: offset
+        type: integer
+      - description: Sort by field (e.g. created_at, title, status)
+        in: query
+        name: sort
+        type: string
+      - description: Sort order (asc or desc)
+        in: query
+        name: order
+        type: string
       produces:
       - application/json
       responses:
@@ -138,7 +154,7 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Get all tasks for the logged-in user (optionally filtered by project)
+      summary: Get all tasks for the logged-in user (with filters, pagination, sorting)
       tags:
       - Tasks
     post:
