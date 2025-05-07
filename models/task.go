@@ -7,5 +7,6 @@ type Task struct {
 	UserID    uint   `json:"user_id" example:"2"`
 	CreatedAt string `json:"created_at" example:"2025-05-07T12:34:56Z"`
 	UpdatedAt string `json:"updated_at" example:"2025-05-07T13:34:56Z"`
-	Project_id uint `json:"project_id" example:"1"`
+	ProjectID uint `json:"project_id" example:"1"`
+	Tags      []Tag  `json:"tags"`
 }

@@ -11,6 +11,28 @@ definitions:
         example: 2
         type: integer
     type: object
+  models.RegisterRequest:
+    properties:
+      password:
+        example: password123
+        type: string
+      role:
+        description: optional, defaults to "user"
+        example: admin
+        type: string
+      username:
+        example: sumit
+        type: string
+    type: object
+  models.Tag:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: urgent
+        type: string
+    type: object
   models.Task:
     properties:
       created_at:
@@ -25,6 +47,10 @@ definitions:
       status:
         example: in-progress
         type: string
+      tags:
+        items:
+          $ref: '#/definitions/models.Tag'
+        type: array
       title:
         example: Buy milk
         type: string
@@ -114,6 +140,69 @@ paths:
       summary: Get tasks for a specific project
       tags:
       - Projects
+  /register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User credentials with optional role (admin or user)
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register a new user (optionally as admin)
+      tags:
+      - Auth
+  /tags:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Tag'
+            type: array
+      summary: Get all tags
+      tags:
+      - Tags
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tag info
+        in: body
+        name: tag
+        required: true
+        schema:
+          $ref: '#/definitions/models.Tag'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Tag'
+      summary: Create a new tag
+      tags:
+      - Tags
   /tasks:
     get:
       parameters:

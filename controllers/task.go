@@ -62,6 +62,13 @@ func GetTasks(c *gin.Context) {
 	c.JSON(http.StatusOK, tasks)
 }
 
+type CreateTaskInput struct {
+	Title     string `json:"title"`
+	Status    string `json:"status"`
+	ProjectID uint   `json:"project_id"`
+	TagIDs    []uint `json:"tag_ids"` // <-- accepts tag IDs
+}
+
 // @Summary Create a new task
 // @Tags Tasks
 // @Security BearerAuth
@@ -74,12 +81,28 @@ func GetTasks(c *gin.Context) {
 // @Router /tasks [post]
 func CreateTask(c *gin.Context) {
 	userID := c.MustGet("userID").(uint)
-	var task models.Task
-	if err := c.BindJSON(&task); err != nil {
+	var input CreateTaskInput
+	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	task.UserID = userID
+
+	var tags []models.Tag
+	if len(input.TagIDs) > 0 {
+		if err := TaskDB.Where("id IN ?", input.TagIDs).Find(&tags).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tag IDs"})
+			return
+		}
+	}
+
+	task := models.Task{
+		Title:     input.Title,
+		Status:    input.Status,
+		ProjectID: input.ProjectID,
+		UserID:    userID,
+		Tags:      tags,
+	}
+
 	TaskDB.Create(&task)
 	c.JSON(http.StatusCreated, task)
 }

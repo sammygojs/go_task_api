@@ -28,7 +28,7 @@ func initDatabase() {
 	if err != nil {
 		panic("Failed to connect to database!")
 	}
-	DB.AutoMigrate(&models.User{}, &models.Task{}, &models.Project{})
+	DB.AutoMigrate(&models.User{}, &models.Task{}, &models.Project{}, &models.Tag{},)
 }
 
 func main() {
@@ -38,6 +38,7 @@ func main() {
 	controllers.InitAuth(DB)
 	controllers.InitTask(DB)
 	controllers.InitProject(DB)
+	controllers.InitTag(DB)
 
 	r := gin.Default()
 
@@ -63,6 +64,10 @@ func main() {
 	//swagger routes
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.URL("http://localhost:8080/swagger/doc.json")))
 
+	//tags
+	r.POST("/tags", controllers.CreateTag)
+	r.GET("/tags", controllers.GetTags)
+
 	// Protected task routes
 	auth := r.Group("/")
 	auth.Use(middleware.AuthMiddleware())
@@ -75,6 +80,7 @@ func main() {
 		auth.POST("/projects", controllers.CreateProject)
 		auth.GET("/projects", controllers.GetProjects)
 		auth.GET("/projects/:id/tasks", controllers.GetProjectTasks)
+		
 
 	}
 

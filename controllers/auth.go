@@ -16,15 +16,14 @@ func InitAuth(db *gorm.DB) {
 	DB = db
 }
 
-// @Summary Register a new user
+// @Summary Register a new user (optionally as admin)
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param input body models.RegisterRequest true "User credentials"
+// @Param input body models.RegisterRequest true "User credentials with optional role (admin or user)"
 // @Success 201 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Router /register [post]
-
 func Register(c *gin.Context) {
 	// var req struct {
 	// 	Username string `json:"username"`
@@ -37,14 +36,25 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
-
+	
 	var existing models.User
 	if err := DB.Where("username = ?", req.Username).First(&existing).Error; err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Username already exists"})
 		return
 	}
 
-	user := models.User{Username: req.Username}
+	// default to "user" if role is not provided
+	role := req.Role
+	if role != "admin" {
+		role = "user"
+	}
+
+	user := models.User{
+		Username: req.Username,
+		Role:     role,
+	}
+
+	// user := models.User{Username: req.Username}
 	if err := user.SetPassword(req.Password); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error setting password"})
 		return
