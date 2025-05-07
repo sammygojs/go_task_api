@@ -28,7 +28,7 @@ func initDatabase() {
 	if err != nil {
 		panic("Failed to connect to database!")
 	}
-	DB.AutoMigrate(&models.User{}, &models.Task{})
+	DB.AutoMigrate(&models.User{}, &models.Task{}, &models.Project{})
 }
 
 func main() {
@@ -37,6 +37,7 @@ func main() {
 	// Inject DB into controllers
 	controllers.InitAuth(DB)
 	controllers.InitTask(DB)
+	controllers.InitProject(DB)
 
 	r := gin.Default()
 
@@ -70,6 +71,11 @@ func main() {
 		auth.POST("/tasks", controllers.CreateTask)
 		auth.PUT("/tasks/:id", controllers.UpdateTask)
 		auth.DELETE("/tasks/:id", controllers.DeleteTask)
+
+		auth.POST("/projects", controllers.CreateProject)
+		auth.GET("/projects", controllers.GetProjects)
+		auth.GET("/projects/:id/tasks", controllers.GetProjectTasks)
+
 	}
 
 	r.Run() // :8080

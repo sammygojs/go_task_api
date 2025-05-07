@@ -15,19 +15,29 @@ func InitTask(db *gorm.DB) {
 	TaskDB = db
 }
 
-// @Summary Get all tasks for the logged-in user
+// @Summary Get all tasks for the logged-in user (optionally filtered by project)
 // @Tags Tasks
 // @Security BearerAuth
 // @Produce json
+// @Param project_id query int false "Filter by Project ID"
 // @Success 200 {array} models.Task
 // @Failure 401 {object} map[string]string
 // @Router /tasks [get]
 func GetTasks(c *gin.Context) {
 	userID := c.MustGet("userID").(uint)
+	projectID := c.Query("project_id")
+
 	var tasks []models.Task
-	TaskDB.Where("user_id = ?", userID).Find(&tasks)
+	query := TaskDB.Where("user_id = ?", userID)
+
+	if projectID != "" {
+		query = query.Where("project_id = ?", projectID)
+	}
+
+	query.Find(&tasks)
 	c.JSON(http.StatusOK, tasks)
 }
+
 
 // @Summary Create a new task
 // @Tags Tasks
