@@ -9,6 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Package middleware handles JWT authentication.
+// It protects routes by validating the Bearer token provided in the Authorization header.
+//
+// Example:
+// Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR...
+//
+// If valid, it sets userID in the Gin context.
+// If missing/invalid, it returns 401 Unauthorized.
+
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")

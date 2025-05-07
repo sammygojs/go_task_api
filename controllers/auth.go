@@ -16,11 +16,22 @@ func InitAuth(db *gorm.DB) {
 	DB = db
 }
 
+// @Summary Register a new user
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param input body models.RegisterRequest true "User credentials"
+// @Success 201 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /register [post]
+
 func Register(c *gin.Context) {
-	var req struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
+	// var req struct {
+	// 	Username string `json:"username"`
+	// 	Password string `json:"password"`
+	// }
+	var req models.RegisterRequest
+	// if err := c.BindJSON(&req); err != nil { ... }
 
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
@@ -47,11 +58,23 @@ func Register(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
 }
 
+// @Summary Login with username and password
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param input body models.LoginRequest true "User credentials"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /login [post]
+
 func Login(c *gin.Context) {
-	var req struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
+	// var req struct {
+	// 	Username string `json:"username"`
+	// 	Password string `json:"password"`
+	// }
+
+	var req models.LoginRequest
 
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})

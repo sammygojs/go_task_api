@@ -15,6 +15,13 @@ func InitTask(db *gorm.DB) {
 	TaskDB = db
 }
 
+// @Summary Get all tasks for the logged-in user
+// @Tags Tasks
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {array} models.Task
+// @Failure 401 {object} map[string]string
+// @Router /tasks [get]
 func GetTasks(c *gin.Context) {
 	userID := c.MustGet("userID").(uint)
 	var tasks []models.Task
@@ -22,6 +29,16 @@ func GetTasks(c *gin.Context) {
 	c.JSON(http.StatusOK, tasks)
 }
 
+// @Summary Create a new task
+// @Tags Tasks
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param task body models.Task true "Task info"
+// @Success 201 {object} models.Task
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /tasks [post]
 func CreateTask(c *gin.Context) {
 	userID := c.MustGet("userID").(uint)
 	var task models.Task
@@ -34,6 +51,18 @@ func CreateTask(c *gin.Context) {
 	c.JSON(http.StatusCreated, task)
 }
 
+// @Summary Update a task
+// @Tags Tasks
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path int true "Task ID"
+// @Param task body models.Task true "Updated task"
+// @Success 200 {object} models.Task
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /tasks/{id} [put]
 func UpdateTask(c *gin.Context) {
 	userID := c.MustGet("userID").(uint)
 	id := c.Param("id")
@@ -52,6 +81,14 @@ func UpdateTask(c *gin.Context) {
 	c.JSON(http.StatusOK, task)
 }
 
+// @Summary Delete a task
+// @Tags Tasks
+// @Security BearerAuth
+// @Param id path int true "Task ID"
+// @Success 204
+// @Failure 401 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /tasks/{id} [delete]
 func DeleteTask(c *gin.Context) {
 	userID := c.MustGet("userID").(uint)
 	id := c.Param("id")

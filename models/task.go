@@ -1,11 +1,10 @@
-// models/task.go
 package models
 
-import "gorm.io/gorm"
-
 type Task struct {
-	gorm.Model
-	Title  string `json:"title"`
-	Status string `json:"status"`
-	UserID uint   `json:"user_id"` // Foreign key
+	ID        uint   `json:"id" example:"1"`
+	Title     string `json:"title" example:"Buy milk"`
+	Status    string `json:"status" example:"in-progress"`
+	UserID    uint   `json:"user_id" example:"2"`
+	CreatedAt string `json:"created_at" example:"2025-05-07T12:34:56Z"`
+	UpdatedAt string `json:"updated_at" example:"2025-05-07T13:34:56Z"`
 }
