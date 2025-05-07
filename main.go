@@ -39,6 +39,7 @@ func main() {
 	controllers.InitTask(DB)
 	controllers.InitProject(DB)
 	controllers.InitTag(DB)
+	middlewares.InitAdmin(DB)
 
 	r := gin.Default()
 
@@ -68,9 +69,17 @@ func main() {
 	r.POST("/tags", controllers.CreateTag)
 	r.GET("/tags", controllers.GetTags)
 
+	// admin routes
+	admin := r.Group("/admin")
+	admin.Use(middlewares.AuthMiddleware(), middlewares.AdminOnly())
+	{
+		admin.GET("/users", controllers.AdminGetUsers)
+		admin.PUT("/users/:id/role", controllers.AdminUpdateUserRole)
+	}
+
 	// Protected task routes
 	auth := r.Group("/")
-	auth.Use(middleware.AuthMiddleware())
+	auth.Use(middlewares.AuthMiddleware())
 	{
 		auth.GET("/tasks", controllers.GetTasks)
 		auth.POST("/tasks", controllers.CreateTask)

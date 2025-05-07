@@ -1,5 +1,5 @@
 // middleware/auth.go
-package middleware
+package middlewares
 
 import (
 	"go_task_api/utils"
